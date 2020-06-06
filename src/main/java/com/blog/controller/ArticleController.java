@@ -14,15 +14,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.ClassUtils;
+import org.springframework.util.ResourceUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.net.http.HttpRequest;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -80,7 +78,7 @@ public class ArticleController {
     public String updateSuccess(@RequestParam("file") MultipartFile file, @RequestParam("article_id") int article_id,
                                 @RequestParam("article_author") String article_author, @RequestParam("article_title")String article_title,
                                 @RequestParam("article_body")String article_body, @RequestParam("article_desc")String article_desc,
-                                @RequestParam("cate_id")int cate_id, @RequestParam(value = "label_id",required=false)List label_id){
+                                @RequestParam("cate_id")int cate_id, @RequestParam(value = "label_id",required=false)List label_id) throws FileNotFoundException {
         String fileName = file.getOriginalFilename();
         Date date = new Date();
 
@@ -107,9 +105,16 @@ public class ArticleController {
             }
         }
 
-        String filepath = ClassUtils.getDefaultClassLoader().getResource("static/img/").getPath();
-        File dest = new File(filepath+fileName);
-
+        File path = new File(ResourceUtils.getURL("classpath:").getPath());
+        if(!path.exists()) {
+            path = new File("");
+        }
+        File upload = new File(path.getAbsolutePath(),"static/img/");
+        if(!upload.exists()) {
+            upload.mkdirs();
+        }
+        //String filepath = ClassUtils.getDefaultClassLoader().getResource("static/img/").getPath();
+        File dest = new File(upload+"/"+fileName);
         try {
             file.transferTo(dest);
         }catch (IOException e){
@@ -160,7 +165,7 @@ public class ArticleController {
     public String addSuccess(@RequestParam("file") MultipartFile file, @RequestParam("article_author") String article_author,
                          @RequestParam("article_title")String article_title, @RequestParam("article_body")String article_body,
                          @RequestParam("article_desc")String article_desc, @RequestParam("cate_id")int cate_id,
-                         @RequestParam(value = "label_id",required=false)List label_id){
+                         @RequestParam(value = "label_id",required=false)List label_id) throws FileNotFoundException {
         String fileName = file.getOriginalFilename();
         Date date = new Date();
 
@@ -185,10 +190,16 @@ public class ArticleController {
             }
         }
 
-        String filepath = ClassUtils.getDefaultClassLoader().getResource("static/img/").getPath();
-        File dest = new File(filepath+fileName);
-        System.out.println(filepath);
-        System.out.println(dest);
+        File path = new File(ResourceUtils.getURL("classpath:").getPath());
+        if(!path.exists()) {
+            path = new File("");
+        }
+        File upload = new File(path.getAbsolutePath(),"static/img/");
+        if(!upload.exists()) {
+            upload.mkdirs();
+        }
+        //String filepath = ClassUtils.getDefaultClassLoader().getResource("static/img/").getPath();
+        File dest = new File(upload+"/"+fileName);
         try {
             file.transferTo(dest);
         }catch (IOException e){
