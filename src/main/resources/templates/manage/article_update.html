@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>后台管理首页</title>
+    <link rel="stylesheet" th:href="@{static/layui/css/layui.css}" media="all">
+    <link rel="stylesheet" th:href="@{static/css/manage/style_manage.css}" media="all">
+    <link rel="stylesheet" th:href="@{static/lib/editormd/css/editormd.min.css}" media="all">
+    <script th:src="@{static/js/jquery.min.js}"  charset="utf-8"></script>
+    <script th:src="@{static/layui/layui.js}" charset="utf-8"></script>
+</head>
+<body>
+<div class="body_class">
+    <div class="div_top">
+        <ul class="layui-nav layui-bg-blue">
+            <li class="layui-nav-item ul_li"><a th:href="@{home}"><i class="layui-icon layui-icon-home"></i>  博客首页</a></li>
+            <li class="layui-nav-item ul_li"><a th:href="@{article_manage}"><i class="layui-icon layui-icon-form"></i>  文章管理</a></li>
+            <li class="layui-nav-item ul_li"><a th:href="@{cate_manage}"><i class="layui-icon layui-icon-note"></i>  分类管理</a></li>
+            <li class="layui-nav-item ul_li"><a th:href="@{label_manage}"><i class="layui-icon layui-icon-username"></i>标签管理</a></li>
+            <li class="layui-nav-item top-item att_right">
+                <a ><img th:src="@{static/img/{filename}(filename=${session.user.user_img})}" th:text="${session.user.user_name}" class="layui-nav-img"></a>
+                <dl class="layui-nav-child">
+                    <dd><a th:href="@{login.out}">退了</a></dd>
+                </dl>
+            </li>
+
+        </ul>
+    </div>
+    <div class="write_big">
+        <div class="write_body">
+            <form class="layui-form write_box" action="updateSuccess" method="post" enctype="multipart/form-data">
+                <div class="layui-form-item" style="display: none;">
+                    <div class="layui-input-block">
+                        <input type="text" name="article_id" id="article_id" value="" class="layui-input" readonly>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">博客标题</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="article_title" th:value="${showarticle.article_title}" id="article_title" lay-verify="article_title"  class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">博客作者</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="article_author" th:value="${showarticle.article_author}" id="article_author" lay-verify="article_author" autocomplete="off" placeholder="请输入作者名" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item ">
+                    <div id="md-content" style="z-index: 1 !important;">
+                        <textarea placeholder="博客内容" th:text="${showarticle.article_body}" id="article_body" name="article_body" style="display:none"></textarea>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">博客描述</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="article_desc" id="article_desc" th:value="${showarticle.article_desc}" lay-verify="article_desc" autocomplete="off" placeholder="请简单描述下博客" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">分类：</label>
+                    <div class="layui-input-inline" th:each="radio:${list_radio}">
+                        <input type="radio" class="optionsRadios" name="cate_id" th:value="${radio.cate_id}" th:title="${radio.cate_name}"/>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">标签：</label>
+                    <div class="layui-input-inline" th:each="check:${list_check}">
+                        <input th:type="checkbox" class="optionsCheckbox"  name="label_id" th:value="${check.label_id}" th:title="${check.label_name}">
+                    </div>
+                </div>
+                <div class="layui-form-item imgSub">
+                    <label class="layui-form-label">修改封面：</label>
+                    <input type="file" name="file"  accept="image/*" />
+                </div>
+                <input type="submit" th:value="提交修改" class="submit_sec layui-btn layui-btn-normal" >
+            </form>
+        </div>
+    </div>
+
+
+    <div class="div_but">
+        <div class="div_avg">
+            <img class="div_img_qr" th:src="@{static/img/Join_me.jpg}">
+        </div>
+        <div class="div_avg">
+            <p class="div_avg_font"><b>联系我</b></p>
+            <p>QQ：1215641103</p>
+        </div>
+        <div class="div_avg">
+            <p class="div_avg_font"><b>日期：2020-5</b></p>
+            <p>版权所有&copy;BruceQ</p>
+        </div>
+        <div class="div_avg_last">
+            <p class="div_avg_font"><b>Blog</b></p>
+            <p>这是我的个人博客，分享一些稀奇古怪的东西！</p>
+        </div>
+    </div>
+</div>
+<script th:src="@{static/lib/editormd/editormd.min.js}" charset="UTF-8"></script>
+<script>
+
+    var radioObj = $('.optionsRadios');
+    var checkBox =$('.optionsCheckbox');
+    //模拟后台回传数据，这里手动设置为1或者0
+    var data = 1;
+
+    //for循环遍历radio对象，比较radio对象中的value和data是否一致
+    //如果一致就设置状态为选中，然后跳出循环，并将其他按钮的状态设置为false
+    for(var i=0; i<radioObj.length;i++){
+        if(radioObj[i].value == data){
+            radioObj[i].checked = true;
+            break;
+        }
+
+        radioObj[i].checked = false;
+    }
+    for(var j=0; j<checkBox.length;j++){
+        if(checkBox[j].value == data){
+            checkBox[j].checked = true;
+            break;
+        }
+
+        checkBox[j].checked = false;
+    }
+
+    var contentEditor;
+
+    $(function() {
+        contentEditor = editormd("md-content", {
+            width   : "100%",
+            height  : 500,
+            syncScrolling : "single",
+            path    : "../static/lib/editormd/lib/"
+        });
+
+    });
+    // 获取Url参数的值
+    function getUrlParam(name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
+        var r = window.location.search.substr(1).match(reg); //匹配目标参数
+        if (r != null) {
+            return unescape(r[2]);
+        }
+        return null;
+    }
+    $('#article_id').val(getUrlParam("article_id"));
+
+    layui.use('form', function(){
+        var form = layui.form; //只有执行了这一步，部分表单元素才会自动修饰成功
+
+        //……
+
+        //但是，如果你的HTML是动态生成的，自动渲染就会失效
+        //因此你需要在相应的地方，执行下述方法来进行渲染
+        form.render();
+    });
+
+    layui.use('element', function(){
+        var element = layui.element;
+        //导航的hover效果、二级菜单等功能，需要依赖element模块
+
+        //监听导航点击
+        element.on('nav(demo)', function(elem){
+            //console.log(elem)
+            layer.msg(elem.text());
+        });
+    });
+</script>
+</body>
+</html>

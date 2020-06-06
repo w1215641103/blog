@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>后台管理首页</title>
+    <link rel="stylesheet" th:href="@{static/layui/css/layui.css}" media="all">
+    <link rel="stylesheet" th:href="@{static/css/manage/style_manage.css}" media="all">
+    <script th:src="@{static/layui/layui.js}" charset="utf-8"></script>
+</head>
+<body>
+<div class="body_class">
+    <div class="div_top">
+        <ul class="layui-nav layui-bg-blue">
+            <li class="layui-nav-item ul_li"><a th:href="@{home}"><i class="layui-icon layui-icon-home"></i>  博客首页</a></li>
+            <li class="layui-nav-item ul_li"><a th:href="@{article_manage}"><i class="layui-icon layui-icon-form"></i>  文章管理</a></li>
+            <li class="layui-nav-item ul_li"><a th:href="@{cate_manage}"><i class="layui-icon layui-icon-note"></i>  分类管理</a></li>
+            <li class="layui-nav-item ul_li"><a th:href="@{label_manage}"><i class="layui-icon layui-icon-username"></i>标签管理</a></li>
+            <li class="layui-nav-item top-item att_right">
+                <a ><img th:src="@{static/img/{filename}(filename=${session.user.user_img})}" th:text="${session.user.user_name}" class="layui-nav-img"></a>
+                <dl class="layui-nav-child">
+                    <dd><a th:href="@{login.out}">退了</a></dd>
+                </dl>
+            </li>
+
+        </ul>
+    </div>
+    <div class="div_user">
+        <div class="div_user_body">
+            <div class="success_page">
+                <h1>修改成功！</h1>
+                <a th:href="@{article_manage}" class=" layui-btn layui-btn-normal">返回文章管理</a>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="div_but">
+        <div class="div_avg">
+            <img class="div_img_qr" th:src="@{static/img/Join_me.jpg}">
+        </div>
+        <div class="div_avg">
+            <p class="div_avg_font"><b>联系我</b></p>
+            <p>QQ：1215641103</p>
+        </div>
+        <div class="div_avg">
+            <p class="div_avg_font"><b>日期：2020-5</b></p>
+            <p>版权所有&copy;BruceQ</p>
+        </div>
+        <div class="div_avg_last">
+            <p class="div_avg_font"><b>Blog</b></p>
+            <p>这是我的个人博客，分享一些稀奇古怪的东西！</p>
+        </div>
+    </div>
+</div>
+
+<script>
+    layui.use('element', function(){
+        var element = layui.element;
+        //导航的hover效果、二级菜单等功能，需要依赖element模块
+
+        //监听导航点击
+        element.on('nav(demo)', function(elem){
+            //console.log(elem)
+            layer.msg(elem.text());
+        });
+    });
+</script>
+</body>
+</html>

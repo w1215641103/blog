@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" th:href="@{static/layui/css/layui.css}" media="all">
+    <link rel="stylesheet" th:href="@{static/css/manage/style_login.css}" media="all">
+    <script th:src="@{static/layui/layui.js}" charset="utf-8"></script>
+<title>登录</title>
+</head>
+<body>
+<div id="box">
+    <h3>个人博客后台</h3>
+    <form th:action="login" th:method="post">
+        <div class="layui-form-item">
+            <label class="layui-form-label label_send">账号：</label>
+            <div class="layui-input-block">
+                <input type="text" name="name" lay-verify="title" autocomplete="off" placeholder="请输入用户名" class="input_info layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label label_send">密码：</label>
+            <div class="layui-input-block">
+                <input type="password" name="password" lay-verify="title" autocomplete="off" placeholder=" 请输入密码" class="input_info layui-input">
+            </div>
+        </div>
+        </br>
+        <div class="out">
+            <p th:text="${massage}"></p>
+        </div>
+        </br>
+        <input class="layui-btn layui-btn-normal" id="but" type="submit"  value="登录" />
+    </form>
+</div>
+</body>
+</html>

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <title>标签</title>
+    <link rel="stylesheet" th:href="@{static/layui/css/layui.css}" media="all">
+    <link rel="stylesheet" th:href="@{static/css/show/style_oth.css}" media="all">
+    <script th:src="@{static/layui/layui.js}" charset="utf-8"></script>
+</head>
+<body>
+<div class="body_class">
+<div class="div_top">
+    <ul class="layui-nav layui-bg-blue ">
+        <li class="layui-nav-item "><a th:href="@{home}"><i class="layui-icon layui-icon-home"></i>  博客首页</a></li>
+        <li class="layui-nav-item "><a th:href="@{cate}"><i class="layui-icon layui-icon-form"></i>  分类</a></li>
+        <li class="layui-nav-item "><a th:href="@{label}"><i class="layui-icon layui-icon-note"></i>  标签</a></li>
+        <li class="layui-nav-item "><a th:href="@{aboutme}"><i class="layui-icon layui-icon-username"></i>  关于我</a></li>
+    </ul>
+</div>
+
+<div class="div_cen" >
+    <div class="div_cen_top">
+        <h2>标签</h2><hr/>
+        <div class="div_cate">
+            <div  class="div_mag div_label"  th:each="Label : ${findLabel}">
+                <a th:href="@{label(id=${Label.label_id})}" th:text="${Label.label_name}"></a>
+            </div>
+        </div>
+    </div>
+    <div class="div_cen_but">
+        <div class="div_article" th:each="State : ${ArticleList}">
+            <img class="div_img" th:src="@{static/img/{filename}(filename=${State.article_img})}" />
+            <div class="div_body" >
+                <h2 ><a th:href="@{article(id=${State.article_id})}" th:text="${State.article_title}"></a></h2>
+                <p>
+                    <em >作者：<span th:text="${State.article_author}"></span></em>&nbsp;&nbsp;&nbsp;&nbsp;
+                    <em>日期：<span th:text="${#dates.format(State.article_time,'yyyy-MM-dd')}"></span></em>
+                </p>
+                <hr/>
+                <p >&nbsp;&nbsp;&nbsp;&nbsp;<span th:text="${State.article_desc}"></span></p>
+                <div class="div_but_p">
+                    <p class="div_p1">标签：<span th:text="${State.label.label_name}"></span></p>
+                    <p class="div_p2">阅读：<span th:text="${State.article_browse}"></span></p>
+                </div>
+            </div>
+            <hr/>
+        </div>
+        <div class="div_body_but">
+            <a th:href="@{label(id=${id},start=1)}" class=" layui-btn layui-btn-normal">首  页</a>
+            <a th:href="@{label(id=${id},start=${page.pageNum -1})}" class=" layui-btn layui-btn-normal">上一页</a>
+            <a th:href="@{label(id=${id},start=${page.pageNum +1})}" class=" layui-btn layui-btn-normal">下一页</a>
+            <a th:href="@{label(id=${id},start=${page.pages})}" class=" layui-btn layui-btn-normal">末  页</a>
+        </div>
+    </div>
+
+</div>
+
+<div class="div_but">
+    <div class="div_avg">
+        <img class="div_img_qr" th:src="@{static/img/Join_me.jpg}">
+    </div>
+    <div class="div_avg">
+        <p class="div_avg_font"><b>联系我</b></p>
+        <p>QQ：1215641103</p>
+    </div>
+    <div class="div_avg">
+        <p class="div_avg_font"><b>日期：2020-5</b></p>
+        <p>版权所有&copy;BruceQ</p>
+    </div>
+    <div class="div_avg_last">
+        <p class="div_avg_font"><b>Blog</b></p>
+        <p>这是我的个人博客，分享一些稀奇古怪的东西！</p>
+    </div>
+</div>
+</div>
+<script>
+    layui.use('element', function(){
+        var element = layui.element; //导航的hover效果、二级菜单等功能，需要依赖element模块
+
+        //监听导航点击
+        element.on('nav(demo)', function(elem){
+            //console.log(elem)
+            layer.msg(elem.text());
+        });
+    });
+
+</script>
+</body>
+</html>

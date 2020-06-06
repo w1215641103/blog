@@ -1,0 +1,46 @@
+*{
+    margin:0;
+    padding:0;
+}
+body{
+    background-image: url("/static/img/background.jpg");
+}
+#box{
+    margin-top:10%;
+    margin-left:60%;
+    width:350px;
+    height: 350px;
+    border-radius:10px;
+    background-color:rgba(255,255,255,0.7);
+}
+h3{
+    font-family: "楷体","楷体_GB2312";
+    font-size:25px;
+    text-align:center;
+    padding-top: 10%;
+}
+#but{
+    width:80%;
+    height:10%;
+    border-radius:4px;
+    margin-left:10%;
+}
+.label_send{
+    font-family: "楷体","楷体_GB2312";
+    margin-top: 5%;
+}
+.input_info{
+    position:absolute;
+    top: 40%;
+    width:80%;
+    border-radius:4px;
+}
+.out{
+    height:20px;
+}
+p{
+    font-size:15px;
+    text-align:center;
+    color:red;
+    margin:5px 0 0 0;
+}

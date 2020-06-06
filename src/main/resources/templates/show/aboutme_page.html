@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <title>关于我</title>
+    <link rel="stylesheet" th:href="@{static/layui/css/layui.css}" media="all">
+    <link rel="stylesheet" th:href="@{static/css/show/style_oth.css}" media="all">
+    <script th:src="@{static/layui/layui.js}" charset="utf-8"></script>
+</head>
+<body>
+<div class="body_class">
+<div class="div_top">
+    <ul class="layui-nav layui-bg-blue ">
+        <li class="layui-nav-item "><a th:href="@{home}"><i class="layui-icon layui-icon-home"></i>  博客首页</a></li>
+        <li class="layui-nav-item "><a th:href="@{cate}"><i class="layui-icon layui-icon-form"></i>  分类</a></li>
+        <li class="layui-nav-item "><a th:href="@{label}"><i class="layui-icon layui-icon-note"></i>  标签</a></li>
+        <li class="layui-nav-item "><a th:href="@{aboutme}"><i class="layui-icon layui-icon-username"></i>  关于我</a></li>
+    </ul>
+</div>
+
+<div class="div_about" >
+    <div class="div_about_body">
+        <img th:src="@{static/img/aboutMe.jpg}">
+        <div class="font_about">
+            <p>一个90后草根站长！刚入门的小白</p>
+            <p>希望一边工作一边积累经验，分享一些个人经验，以及结交一些的朋友。</p>
+            <p>我把自己掌握的知识到运用到这里，也将自己遇到的问题，都记录下来，方便自己查阅。</p>
+        </div>
+    </div>
+</div>
+
+<div class="div_but">
+    <div class="div_avg">
+        <img class="div_img_qr" th:src="@{static/img/Join_me.jpg}">
+    </div>
+    <div class="div_avg">
+        <p class="div_avg_font"><b>联系我</b></p>
+        <p>QQ：1215641103</p>
+    </div>
+    <div class="div_avg">
+        <p class="div_avg_font"><b>日期：2020-5</b></p>
+        <p>版权所有&copy;BruceQ</p>
+    </div>
+    <div class="div_avg_last">
+        <p class="div_avg_font"><b>Blog</b></p>
+        <p>这是我的个人博客，分享一些稀奇古怪的东西！</p>
+    </div>
+</div>
+</div>
+<script>
+    layui.use('element', function(){
+        var element = layui.element; //导航的hover效果、二级菜单等功能，需要依赖element模块
+
+        //监听导航点击
+        element.on('nav(demo)', function(elem){
+            //console.log(elem)
+            layer.msg(elem.text());
+        });
+    });
+
+</script>
+</body>
+</html>

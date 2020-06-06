@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.blog.dao.Ar_laMapper">
+
+    <delete id="deleteByArId" parameterType="_int">
+        delete from ar_la where ar_id=#{article_id}
+    </delete>
+
+    <insert id="addAr_la" parameterType="com.blog.pojo.Ar_la">
+        insert into ar_la(ar_id, la_id) values (#{ar_id},#{la_id})
+    </insert>
+
+    <delete id="deleteByLaId" parameterType="_int">
+        delete  from ar_la where la_id=#{id}
+    </delete>
+</mapper>

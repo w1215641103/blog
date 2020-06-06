@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>后台管理首页</title>
+    <link rel="stylesheet" th:href="@{static/layui/css/layui.css}" media="all">
+    <link rel="stylesheet" th:href="@{static/css/manage/style_manage.css}" media="all">
+    <script th:src="@{static/layui/layui.js}" charset="utf-8"></script>
+
+    <script>
+        layui.use(['jquery', 'table', 'layer', 'form'],  function(){
+            var $ = layui.$;
+            var table = layui.table;
+            var layer = layui.layer;
+            var form = layui.form;
+
+            table.render({
+                elem: '#label-tbl'
+                ,url:'/listLabel'
+                ,cols: [
+                    [
+                        {field:'label_id', width:250,align:'center',  title: '标签id', sort: true}
+                        ,{field:'label_name', width:250,align:'center',  title: '标签名'}
+                        ,{fixed: 'right', width:250, align:'center', toolbar: '#barDemo'}
+                    ]
+                ],
+                id: 'label-tbl',
+                page: true
+            });
+            // 监听行工具栏事件
+            table.on('tool(label-tbl)', function(obj) {
+                // 获取当前行数据和lay-event的值
+                var data = obj.data;
+                var event = obj.event;
+
+                // 更新标签事件
+                if (event === 'update') {
+                    // 每次显示更新标签的表单前自动为表单填写该行的数据
+                    form.val('update-label-form', {
+                        "label_id": data.label_id,
+                        "label_name": data.label_name,
+                    });
+                    // 显示更新标签表单的弹出层
+                    layer.open({
+                        type: 1,
+                        title: '更新标签',
+                        skin: 'layui-layer-molv',
+                        area: ['500px'],
+                        content: $('#updata-label-layer')
+                    });
+                    // 更新标签表单提交
+                    form.on('submit(updata-label-form-submit)', function(data) {
+                        // ajax方式更新课程
+                        $.ajax({
+                            url: "/upLabel",
+                            type: "PUT",
+                            data: JSON.stringify(data.field),
+                            contentType: 'application/json',
+                            dataType: 'json',
+                            success: function(data) {
+                                if (data.status == 1) {
+                                    layer.close(layer.index);
+                                    layer.msg('更新成功');
+                                    table.reload('label-tbl');
+                                }else{
+                                    layer.msg('更新失败');
+                                }
+                            },
+                            error: function() {
+                                console.log("ajax error");
+                            }
+                        });
+                        // 阻止表单跳转
+                        return false;
+                    });
+                }
+
+                // 删除标签事件
+                if (event === 'delete') {
+                    layer.confirm('确定删除该标签吗？', function(index) {
+                        // ajax方式删除课程
+                        $.ajax({
+                            url: '/deleteLabelById/' + data.label_id,
+                            type: "DELETE",
+                            dataType: 'json',
+                            success: function(data) {
+                                if (data.status == 1) {
+                                    layer.msg('删除成功');
+                                    table.reload('label-tbl');
+                                } else{
+                                    layer.msg('删除失败');
+                                }
+                            },
+                            error: function() {
+                                console.log("ajax error");
+                            }
+                        });
+                        layer.close(index);
+                    });
+                }
+            });
+            form.on('submit(form-add)', function(data) {
+                // ajax方式添加
+                $.ajax({
+                    url: "/addLabel",
+                    type: "POST",
+                    data: JSON.stringify(data.field),
+                    contentType: 'application/json',
+                    dataType: 'json',
+                    success: function(data) {
+                        if (data.status == 1) {
+                            layer.close(layer.index);
+                            layer.msg('添加成功');
+                            $(" input[ name='label_name' ] ").val("")
+                            table.reload('label-tbl');
+                        } else {
+                            layer.msg('添加失败');
+                            $(" input[ name='label_name' ] ").val("")
+                        }
+                    },
+                    error: function() {
+                        console.log("ajax error");
+                    }
+                });
+                // 阻止表单跳转
+                return false;
+            });
+
+        });
+    </script>
+    <script type="text/html" id="barDemo">
+        <a class="layui-btn layui-btn-xs" lay-event="update">修改</a>
+        <a class="layui-btn layui-btn-danger  layui-btn-xs" lay-event="delete">删除</a>
+    </script>
+
+
+</head>
+<body>
+<div class="body_class">
+    <div class="div_top">
+        <ul class="layui-nav layui-bg-blue">
+            <li class="layui-nav-item ul_li"><a th:href="@{home}"><i class="layui-icon layui-icon-home"></i>  博客首页</a></li>
+            <li class="layui-nav-item ul_li"><a th:href="@{article_manage}"><i class="layui-icon layui-icon-form"></i>  文章管理</a></li>
+            <li class="layui-nav-item ul_li"><a th:href="@{cate_manage}"><i class="layui-icon layui-icon-note"></i>  分类管理</a></li>
+            <li class="layui-nav-item ul_li"><a th:href="@{label_manage}"><i class="layui-icon layui-icon-username"></i>标签管理</a></li>
+            <li class="layui-nav-item top-item att_right">
+                <a ><img th:src="@{static/img/{filename}(filename=${session.user.user_img})}" th:text="${session.user.user_name}" class="layui-nav-img"></a>
+                <dl class="layui-nav-child">
+                    <dd><a th:href="@{login.out}">退了</a></dd>
+                </dl>
+            </li>
+        </ul>
+    </div>
+    <div id="updata-label-layer" style="display: none; padding: 20px">
+        <form id="update-label-form" class="layui-form sub_arr" lay-filter="update-label-form">
+            <div class="layui-form-item" style="display: none;">
+                <div class="layui-input-block">
+                    <input type="text" name="label_id" class="layui-input" readonly>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">修改标签:</label>
+                <div class="layui-input-inline">
+                    <input type="text"  name="label_name"  lay-verify="required" class="layui-input" >
+                </div>
+                <button class="layui-btn layui-btn-normal" lay-submit lay-filter="updata-label-form-submit">修改</button>
+            </div>
+        </form>
+    </div>
+    <div class="div_user">
+        <div class="div_user_body">
+            <form  class="layui-form sub_arr" >
+                <div class="layui-form-item">
+                    <label class="layui-form-label">添加标签:</label>
+                    <div class="layui-input-inline">
+                        <input type="text"  name="label_name" id="label_name" lay-verify="required" class="layui-input" >
+                    </div>
+                    <div class="layui-input-inline">
+                        <button class="layui-btn layui-btn-normal" lay-submit lay-filter="form-add">添加</button>
+                    </div>
+                </div>
+            </form>
+            <table class="layui-hide" id="label-tbl" lay-filter="label-tbl"></table>
+        </div>
+    </div>
+
+
+    <div class="div_but">
+        <div class="div_avg">
+            <img class="div_img_qr" th:src="@{static/img/Join_me.jpg}">
+        </div>
+        <div class="div_avg">
+            <p class="div_avg_font"><b>联系我</b></p>
+            <p>QQ：1215641103</p>
+        </div>
+        <div class="div_avg">
+            <p class="div_avg_font"><b>日期：2020-5</b></p>
+            <p>版权所有&copy;BruceQ</p>
+        </div>
+        <div class="div_avg_last">
+            <p class="div_avg_font"><b>Blog</b></p>
+            <p>这是我的个人博客，分享一些稀奇古怪的东西！</p>
+        </div>
+    </div>
+</div>
+
+<script>
+    layui.use('element', function(){
+        var element = layui.element;
+        //导航的hover效果、二级菜单等功能，需要依赖element模块
+
+        //监听导航点击
+        element.on('nav(demo)', function(elem){
+            //console.log(elem)
+            layer.msg(elem.text());
+        });
+    });
+</script>
+</body>
+</html>

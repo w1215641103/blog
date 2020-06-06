@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>后台管理首页</title>
+    <link rel="stylesheet" th:href="@{static/layui/css/layui.css}" media="all">
+    <link rel="stylesheet" th:href="@{static/css/manage/style_manage.css}" media="all">
+    <script th:src="@{static/layui/layui.js}" charset="utf-8"></script>
+
+    <script>
+        layui.use(['jquery', 'table', 'layer', 'form'],  function() {
+            var $ = layui.$;
+            var table = layui.table;
+            var layer = layui.layer;
+            var form = layui.form;
+
+            table.render({
+                elem: '#article-tbl'
+                , url: '/listArticle'
+                , cols: [
+                    [
+                        {field: 'article_id', width: 150, align: 'center', title: '文章id', sort: true}
+                        , {field: 'article_title', width: 250, align: 'center', title: '文章名'}
+                        , {field: 'article_author', width: 150, align: 'center', title: '作者'}
+                        , {fixed: 'right', width: 200, align: 'center', toolbar: '#barDemo'}
+                    ]
+                ],
+                id: 'article-tbl',
+                page: true
+            });
+            // 监听行工具栏事件
+            table.on('tool(article-tbl)', function (obj) {
+                // 获取当前行数据和lay-event的值
+                var data = obj.data;
+                var event = obj.event;
+                if (event === 'updateArticle') {
+                    window.location.href = 'updateArticle?article_id='+data.article_id;
+                }
+                // 删除文章事件
+                if (event === 'deleteArticle') {
+                    layer.confirm('确定删除该文章吗？', function (index) {
+                        // ajax方式删除课程
+                        $.ajax({
+                            url: '/deleteArticleById/' + data.article_id,
+                            type: "DELETE",
+                            dataType: 'json',
+                            success: function (data) {
+                                if (data.status == 1) {
+                                    layer.msg('删除成功');
+                                    table.reload('article-tbl');
+                                } else {
+                                    layer.msg('删除失败');
+                                }
+                            },
+                            error: function () {
+                                console.log("ajax error");
+                            }
+                        });
+                        layer.close(index);
+                    });
+                }
+            });
+        });
+    </script>
+    <script type="text/html" id="barDemo">
+        <a class="layui-btn layui-btn-xs"  lay-event="updateArticle">修改</a>
+        <a class="layui-btn layui-btn-danger  layui-btn-xs" lay-event="deleteArticle">删除</a>
+    </script>
+
+</head>
+<body>
+<div class="body_class">
+    <div class="div_top">
+        <ul class="layui-nav layui-bg-blue">
+            <li class="layui-nav-item ul_li"><a th:href="@{home}"><i class="layui-icon layui-icon-home"></i>  博客首页</a></li>
+            <li class="layui-nav-item ul_li"><a th:href="@{article_manage}"><i class="layui-icon layui-icon-form"></i>  文章管理</a></li>
+            <li class="layui-nav-item ul_li"><a th:href="@{cate_manage}"><i class="layui-icon layui-icon-note"></i>  分类管理</a></li>
+            <li class="layui-nav-item ul_li"><a th:href="@{label_manage}"><i class="layui-icon layui-icon-username"></i>标签管理</a></li>
+            <li class="layui-nav-item top-item att_right">
+                <a ><img th:src="@{static/img/{filename}(filename=${session.user.user_img})}" th:text="${session.user.user_name}" class="layui-nav-img"></a>
+                <dl class="layui-nav-child">
+                    <dd><a th:href="@{login.out}">退了</a></dd>
+                </dl>
+            </li>
+
+        </ul>
+    </div>
+    <div class="div_user">
+        <div class="div_user_body">
+            <a th:href="@{articleAddPage}" class="write_article layui-btn layui-btn-normal">写博客</a>
+            <table class="layui-hide" id="article-tbl" lay-filter="article-tbl"></table>
+        </div>
+    </div>
+
+
+    <div class="div_but">
+        <div class="div_avg">
+            <img class="div_img_qr" th:src="@{static/img/Join_me.jpg}">
+        </div>
+        <div class="div_avg">
+            <p class="div_avg_font"><b>联系我</b></p>
+            <p>QQ：1215641103</p>
+        </div>
+        <div class="div_avg">
+            <p class="div_avg_font"><b>日期：2020-5</b></p>
+            <p>版权所有&copy;BruceQ</p>
+        </div>
+        <div class="div_avg_last">
+            <p class="div_avg_font"><b>Blog</b></p>
+            <p>这是我的个人博客，分享一些稀奇古怪的东西！</p>
+        </div>
+    </div>
+</div>
+
+<script>
+    layui.use('element', function(){
+        var element = layui.element;
+        //导航的hover效果、二级菜单等功能，需要依赖element模块
+
+        //监听导航点击
+        element.on('nav(demo)', function(elem){
+            //console.log(elem)
+            layer.msg(elem.text());
+        });
+    });
+</script>
+</body>
+</html>

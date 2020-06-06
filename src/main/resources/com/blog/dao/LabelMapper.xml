@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.blog.dao.LabelMapper">
+
+    <resultMap type="com.blog.pojo.Article" id="LabelWithArticle">
+        <id column="article_id" property="article_id"/>
+        <result column="article_author" property="article_author"/>
+        <result column="article_title" property="article_title"/>
+        <result column="article_body" property="article_body"/>
+        <result column="article_desc" property="article_desc"/>
+        <result column="article_time" property="article_time"/>
+        <result column="article_browse" property="article_browse"/>
+        <result column="article_img" property="article_img"/>
+        <result column="article_cateid" property="article_cateid"/>
+        <!-- 多表关联映射 -->
+        <collection property="label" ofType="com.blog.pojo.Label">
+            <id property="label_id" column="label_id"/>
+            <result property="label_name" column="label_name"/>
+        </collection>
+    </resultMap>
+    <select id="findArticleByLabel" resultMap="LabelWithArticle">
+		select * from article ar,label la,ar_la a
+		where a.ar_id=ar.article_id
+		and a.la_id=la.label_id
+		<if test="label_id!=null">
+          and la.label_id=#{id}
+        </if>
+	</select>
+
+    <select id="findLabel" resultType="com.blog.pojo.Label">
+        select * from label
+    </select>
+
+    <select id="countLabel" resultType="_int">
+        select count(label_name) from label
+    </select>
+
+    <delete id="deleteLabelById" parameterType="_int">
+        delete from label where label_id = #{id}
+    </delete>
+
+    <insert id="addLabel" parameterType="com.blog.pojo.Label">
+        insert into label(label_name) value (#{label_name})
+    </insert>
+
+    <update id="updateLabel" parameterType="com.blog.pojo.Label">
+        update label set label_name=#{label_name} where label_id =#{label_id}
+    </update>
+
+</mapper>

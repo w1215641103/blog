@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.blog.dao.UserMapper">
+
+    <resultMap type="com.blog.pojo.Article" id="LabelWithArticle">
+        <id column="user_id" property="user_id"/>
+        <result column="user_account" property="user_account"/>
+        <result column="user_pwd" property="user_pwd"/>
+        <result column="user_name" property="user_name"/>
+        <result column="user_img" property="user_img"/>
+    </resultMap>
+
+    <!-- 根据用户名和密码查找用户  -->
+    <select id="findUser"  resultType="com.blog.pojo.User" >
+        select * from user where user_account = #{user_account} and user_pwd = #{user_pwd}
+    </select>
+
+</mapper>
