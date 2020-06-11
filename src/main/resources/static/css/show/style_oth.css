@@ -32,7 +32,11 @@ ul li{
 }
 .div_avg_font{
     margin-top: 50px;
+    font-weight: bold;
     font-size: 15px;
+}
+.div_avg_font2{
+    font: 14px Helvetica Neue,Helvetica,PingFang SC,Tahoma,Arial,sans-serif;
 }
 .div_img_qr{
     margin-top: 30px;
@@ -168,8 +172,9 @@ ul li{
     border-bottom:#e6e6e6 1px solid;
 }
 .div_top_body{
-    width: 100%;
+    width: 98%;
     height: 135vh;
+    margin-left: 2%;
     overflow-x: hidden;
     overflow-y: scroll;
 }
